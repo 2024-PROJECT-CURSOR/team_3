@@ -13,9 +13,9 @@ public class ToDoService {
     private final ToDoRepository toDoRepository;
 
     // 할 일 목록을 가져오는 메소드
-    public List<ToDoEntity> getList() {
-        return this.toDoRepository.findAll();
-    }
+//    public List<ToDoEntity> getList() {
+//        return this.toDoRepository.findAll();
+//    }
 
     // 할 일을 추가하는 메소드
     public ToDoEntity insertdata(ToDoEntity toDoEntity) {
@@ -28,7 +28,7 @@ public class ToDoService {
         if (existingToDo.isPresent()) {
             ToDoEntity toDoEntity = existingToDo.get();
             toDoEntity.setTitle(updatedToDo.getTitle());
-            toDoEntity.setDescription(updatedToDo.getDescription());
+            toDoEntity.setIsDone(updatedToDo.getIsDone());
             return toDoRepository.save(toDoEntity);
         } else {
             throw new IllegalArgumentException("ToDo with ID " + id + " not found.");
@@ -36,7 +36,7 @@ public class ToDoService {
     }
 
     // 할 일을 삭제하는 메소드
-    public void deleteData(long id) {
+    public void deleteData(long  id) {
         Optional<ToDoEntity> existingToDo = toDoRepository.findById(id);
         if (existingToDo.isPresent()) {
             toDoRepository.deleteById(id);

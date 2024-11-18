@@ -7,14 +7,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class ToDoEntity {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(length = 200)
-    private String title;
+    @Column(length = 50)
+    private String username;
 
     @Column(nullable = false)
-    private Boolean isDone;
+    private String userid;
+
+    @Column(nullable = false)
+    private String password;
+
 }

@@ -26,7 +26,9 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'nz.net.ultra.thymeleaf:thymeleaf-layout-dialect'
+	//implementation 'nz.net.ultra.thymeleaf:thymeleaf-layout-dialect'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'// 추가
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
