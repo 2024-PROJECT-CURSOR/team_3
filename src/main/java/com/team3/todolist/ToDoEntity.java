@@ -1,6 +1,5 @@
 package com.team3.todolist;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-
 public class ToDoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
