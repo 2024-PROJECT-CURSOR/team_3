@@ -36,7 +36,7 @@ public class ToDoService {
     }
 
     // 할 일을 삭제하는 메소드
-    public void deleteData(long id) {
+    public void deleteData(long  id) {
         Optional<ToDoEntity> existingToDo = toDoRepository.findById(id);
         if (existingToDo.isPresent()) {
             toDoRepository.deleteById(id);
