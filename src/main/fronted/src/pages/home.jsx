@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { getlist, postList } from "../api/Home.js"; // getlist 함수 import
+import { getlist, postList, deleteList } from "../api/Home.js"; // getlist 함수 import
 import { FaRegTrashCan } from "react-icons/fa6";
 import "./button.css";
 import '../App.css';
+import Swal from 'sweetalert2';
 
 // Styled-components
 const Background = styled.div`
@@ -74,20 +76,35 @@ const InsertTitle = styled.input`
     padding: 0 1rem;
     font-size: 1rem;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: none;
+    background: linear-gradient(145deg, #fdfdfd, #f5f5f5);
+    box-shadow: inset 2px 2px 5px #ccc, inset -2px -2px 5px #fff;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0px 0px 8px rgba(100, 149, 237, 0.8); /* 포커스 상태 */
+    }
 `;
 
 const InsertButton = styled.button`
     width: 5rem;
     height: 2.3rem;
     font-size: 1rem;
-    background-color: #DAE9FE;
+    background: linear-gradient(145deg, #c5d7ff, #e6f0ff); /* 입체감 효과 */
+    box-shadow: 2px 2px 5px #aaa, -2px -2px 5px #fff; /* 음영 효과 */
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: 0.3s ease;
+
     &:hover {
-        background-color: #A7D1FF;
+        background: linear-gradient(145deg, #a7d1ff, #cde5ff);
     }
+
+    &:active {
+        box-shadow: inset 2px 2px 5px #aaa, inset -2px -2px 5px #fff;
+    }
+
     font-family: MainFont;
 `;
 
@@ -130,7 +147,7 @@ const ButtonContainer = styled(Td)`
 
 const StyledTrashIcon = styled(FaRegTrashCan)`
     color: black; 
-    font-size: 1rem; 
+    font-size: 0.8rem;
 `;
 
 
@@ -151,9 +168,14 @@ const CheckBoxLabel = styled.label`
     display: inline-block;
     cursor: pointer;
     position: relative;
-    background-color: white;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    
+    background: linear-gradient(145deg, #f5f5f5, #dcdcdc); /* 입체감 */
+    box-shadow: 2px 2px 5px #aaa, -2px -2px 5px #fff; /* 외부 음영 */
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        background: linear-gradient(145deg, #e0e0e0, #c6c6c6);
+    }
+
     &::after {
         content: '';
         position: absolute;
@@ -167,9 +189,14 @@ const CheckBoxLabel = styled.label`
         opacity: 0;
         transition: opacity 0.3s ease;
     }
-    
+
     input:checked + &::after {
-        opacity: 1; 
+        opacity: 1;
+    }
+
+    input:checked + & {
+        background: linear-gradient(145deg, #a7d1ff, #dce5ff);
+        box-shadow: inset 2px 2px 5px #aaa, inset -2px -2px 5px #fff; /* 내부 음영 */
     }
 `;
 
@@ -180,13 +207,13 @@ const CheckBoxLabel = styled.label`
 export default function Home() {
     const [toDoList, setToDoList] = useState([]);
     const [title, setTitle] = useState("");
+    const location = useLocation();  // useLocation을 사용하여 현재 URL의 쿼리 파라미터를 읽어옵니다.
+    const userid = new URLSearchParams(location.search).get('userid');  // 쿼리 파라미터에서 'userid'를 가져옵니다.
 
-    // Fetch data on mount
     useEffect(() => {
         loadList();
     }, []);
 
-    // 데이터 목록을 불러오는 함수
     const loadList = async () => {
         try {
             const res = await getlist();
@@ -196,7 +223,6 @@ export default function Home() {
         }
     };
 
-    // 새로운 데이터를 추가하는 함수
     const handleSubmit = async () => {
         if (!title.trim()) {
             alert("Title cannot be empty!");
@@ -204,19 +230,43 @@ export default function Home() {
         }
 
         try {
-            const newItem = await postList(title); // 서버에 새로운 아이템 추가
-            setToDoList((prev) => [...prev, newItem]); // 기존 목록에 추가
-            setTitle(""); // 입력 필드 초기화
+            const newItem = await postList(title);
+            setToDoList((prev) => [...prev, newItem]);
+            setTitle("");
         } catch (err) {
             console.error("Error adding item:", err);
             alert("Failed to add the item. Please try again.");
         }
     };
 
+    const handleDelete = async (id) => {
+        try {
+            await deleteList(id);
+            setToDoList((prev) => prev.filter((item) => item.id !== id));
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Deleted!',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+        } catch (err) {
+            console.error("Error deleting item:", err);
+            Swal.fire({
+                icon: 'error',
+                title: '삭제 실패',
+                text: '삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
+            });
+        }
+    };
+
     return (
         <Background>
             <UserInfoContainer>
-                <UserInfo>ToDo List</UserInfo>
+                <UserInfo>{userid}'s ToDo List</UserInfo> {/* 로그인한 사용자의 아이디를 표시 */}
                 <UserInfoLine />
             </UserInfoContainer>
 
@@ -237,24 +287,17 @@ export default function Home() {
                                 <CheckBoxWrapper>
                                     <CustomCheckBox type="checkbox" id={`check-${item.id}`} />
                                     <CheckBoxLabel htmlFor={`check-${item.id}`} />
-
-
                                 </CheckBoxWrapper>
                             </Td>
                             <CenterTd>{item.title}</CenterTd>
                             <Td>
                                 <ButtonContainer>
-                                    <div className="button" style={{ width: "60px", height: "30px" }}>
-                                        <p className="btnText" style={{ fontSize: "10px" }}>Edit</p>
-                                        <div className="btnTwo" style={{ height: "60px", marginTop: "-60px" }}>
-                                            <p className="btnText2" style={{ fontSize: "10px" }}></p>
-                                        </div>
-                                    </div>
-                                    <div className="button" style={{ width: "60px", height: "30px" }}>
-                                        <p className="btnText" style={{ fontSize: "10px" }}>Delete</p>
-                                        <div className="btnTwo" style={{ height: "60px", marginTop: "-60px" }}>
-                                            <p className="btnText2" style={{ fontSize: "10px" }}><StyledTrashIcon /></p>
-                                        </div>
+                                    <div
+                                        className="button"
+                                        style={{ width: "60px", height: "30px" }}
+                                        onClick={() => handleDelete(item.id)}
+                                    >
+                                        <p className="btnText" style={{ fontSize: "10px" }}><StyledTrashIcon /></p>
                                     </div>
                                 </ButtonContainer>
                             </Td>

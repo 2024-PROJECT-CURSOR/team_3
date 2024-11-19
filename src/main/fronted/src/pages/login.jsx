@@ -1,50 +1,63 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { loginUser } from "../api/login"; // login.js에서 작성한 로그인 함수
 
-// Styled Components
 const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f4f4f9;
+    background-color: #FDFBF1;
 `;
 
 const LoginBox = styled.div`
-    background: white;
-    padding: 20px 40px;
+    background: #DAE9FE;
+    padding: 20px 80px;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 350px;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.8);
 `;
 
 const Title = styled.h1`
-    font-size: 24px;
+    font-size: 30px;
     color: #333;
     margin-bottom: 20px;
+    font-weight: bold;
 `;
 
 const Input = styled.input`
-    width: 100%;
+    width: 80%;
     padding: 10px;
     margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    outline: none;
+
+    &:focus {
+        background-color: #fff;
+    }
 `;
 
 const Button = styled.button`
-    width: 100%;
-    padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    font-size: 16px;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 50px;
+    background: #7986cb;
+    color: #fff;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
 
     &:hover {
-        background-color: #45a049;
+        background-color: #3f51b5;
     }
 `;
 
@@ -53,44 +66,94 @@ const ErrorMessage = styled.p`
     font-size: 14px;
 `;
 
+const ToggleButton = styled.button`
+    position: absolute;
+    right: 10px;
+    top: 55%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+`;
+
 export default function Login() {
-    const [username, setUsername] = useState("");
+    const [userid, setUserid] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        // Validate inputs
-        if (!username || !password) {
-            setError("Both fields are required!");
+    // Login.js
+    const handleLogin = async () => {
+        if (!userid || !password) {
+            setError("아이디와 비밀번호는 필수입니다.");
             return;
         }
 
         setError("");
-        console.log("Username:", username);
-        console.log("Password:", password);
-        // Here, you can handle login logic, like sending data to an API.
+
+        try {
+            const userData = await loginUser(userid, password);
+            Swal.fire({
+                icon: "success",
+                title: "로그인 성공!",
+                text: `${userData.username}님 환영합니다!`,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 2000,
+                toast: true,
+                timerProgressBar: true,
+            });
+
+            // 로그인 성공 후 페이지 리디렉션
+            window.location.href = `/home?userid=${userid}`;  // 로그인한 userid를 쿼리 파라미터로 전달
+        } catch (error) {
+            setError(error.message || "로그인 실패. 아이디와 비밀번호를 확인해주세요.");
+            Swal.fire({
+                icon: "error",
+                title: "로그인 실패!",
+                text: "아이디와 비밀번호를 확인해주세요.",
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                toast: true,
+                timerProgressBar: true,
+            });
+        }
     };
+
 
     return (
         <Container>
             <LoginBox>
-                <Title>Login</Title>
+                <Title>Todo List!</Title>
                 {error && <ErrorMessage>{error}</ErrorMessage>}
-                <form onSubmit={handleSubmit}>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleLogin();
+                    }}
+                >
                     <Input
                         type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="User ID"
+                        value={userid}
+                        onChange={(e) => setUserid(e.target.value)}
                     />
-                    <Input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <div style={{ position: "relative" }}>
+                        <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <ToggleButton
+                            type="button"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                        >
+                            {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
+                        </ToggleButton>
+                    </div>
                     <Button type="submit">Login</Button>
                 </form>
             </LoginBox>

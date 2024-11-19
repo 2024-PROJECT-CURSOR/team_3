@@ -16,5 +16,5 @@ public class ToDoEntity {
     private String title;
 
     @Column(nullable = false)
-    private Boolean isDone;
+    private Boolean isDone = false;
 }

@@ -12,10 +12,9 @@ public class ToDoService {
 
     private final ToDoRepository toDoRepository;
 
-    // 할 일 목록을 가져오는 메소드
-//    public List<ToDoEntity> getList() {
-//        return this.toDoRepository.findAll();
-//    }
+    public List<ToDoEntity> getList() {
+        return this.toDoRepository.findAll();
+    }
 
     // 할 일을 추가하는 메소드
     public ToDoEntity insertdata(ToDoEntity toDoEntity) {
@@ -40,8 +39,6 @@ public class ToDoService {
         Optional<ToDoEntity> existingToDo = toDoRepository.findById(id);
         if (existingToDo.isPresent()) {
             toDoRepository.deleteById(id);
-        } else {
-            throw new IllegalArgumentException("ToDo with ID " + id + " not found.");
         }
     }
 }

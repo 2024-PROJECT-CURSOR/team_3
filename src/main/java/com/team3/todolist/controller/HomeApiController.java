@@ -38,8 +38,8 @@ public class HomeApiController {
 
     // DELETE 요청: 투두 삭제
     @DeleteMapping(value = "/todolist/{id}")
-    public ResponseEntity<String> deleteTodo(@PathVariable("id") int id) {
+    public ResponseEntity<Void> deleteTodo(@PathVariable("id") int id) {
         toDoService.deleteData(id);
-        return ResponseEntity.ok("ToDo with ID " + id + " deleted successfully.");
+        return ResponseEntity.noContent().build();
     }
 }

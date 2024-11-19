@@ -22,3 +22,22 @@ export const postList = async (title) => {
         throw new Error(`Error occurred: ${error.message}`);
     }
 };
+
+export const updateList = async (id, title) => {
+    try {
+        const response = await defaultAxios.patch(`/todolist/${id}`, {
+            title
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error while updating the todo:", error);
+        throw new Error(`Error occurred: ${error.message}`);
+    }
+};
+
+
+
+export const deleteList = async (id) => {
+    const response = await defaultAxios.delete(`/todolist/${id}`);
+    return response.data;
+};
