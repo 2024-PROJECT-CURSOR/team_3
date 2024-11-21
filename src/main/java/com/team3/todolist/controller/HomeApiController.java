@@ -2,6 +2,7 @@ package com.team3.todolist.controller;
 
 import com.team3.todolist.entity.ToDoEntity;
 import com.team3.todolist.service.ToDoService;
+import com.team3.todolist.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 public class HomeApiController {
 
     private final ToDoService toDoService;
+    private final UserService userService;
 
     // GET 요청: 투두리스트 조회
     @GetMapping(value = "/todolist")
@@ -42,4 +44,5 @@ public class HomeApiController {
         toDoService.deleteData(id);
         return ResponseEntity.noContent().build();
     }
+
 }

@@ -1,11 +1,13 @@
 package com.team3.todolist.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @Entity
 public class UserEntity {
     @Id
