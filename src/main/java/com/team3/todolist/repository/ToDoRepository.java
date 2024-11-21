@@ -1,8 +1,7 @@
-package com.team3.todolist;
+package com.team3.todolist.repository;
 
+import com.team3.todolist.entity.ToDoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface ToDoRepository extends JpaRepository<ToDoEntity, Long> {
 }

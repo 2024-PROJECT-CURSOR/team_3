@@ -1,7 +1,7 @@
 package com.team3.todolist.controller;
 
-import com.team3.todolist.ToDoEntity;
-import com.team3.todolist.ToDoService;
+import com.team3.todolist.entity.ToDoEntity;
+import com.team3.todolist.service.ToDoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

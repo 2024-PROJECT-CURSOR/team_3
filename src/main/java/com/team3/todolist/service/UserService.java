@@ -1,5 +1,7 @@
-package com.team3.todolist;
+package com.team3.todolist.service;
 
+import com.team3.todolist.entity.UserEntity;
+import com.team3.todolist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

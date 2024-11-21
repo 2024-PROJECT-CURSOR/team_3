@@ -1,5 +1,6 @@
-package com.team3.todolist;
+package com.team3.todolist.repository;
 
+import com.team3.todolist.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

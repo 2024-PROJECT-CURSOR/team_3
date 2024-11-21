@@ -1,5 +1,7 @@
 package com.team3.todolist;
 
+import com.team3.todolist.entity.ToDoEntity;
+import com.team3.todolist.repository.ToDoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

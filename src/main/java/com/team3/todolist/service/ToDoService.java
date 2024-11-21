@@ -1,5 +1,7 @@
-package com.team3.todolist;
+package com.team3.todolist.service;
 
+import com.team3.todolist.entity.ToDoEntity;
+import com.team3.todolist.repository.ToDoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.team3.todolist;
+package com.team3.todolist.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
